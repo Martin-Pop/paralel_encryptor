@@ -15,8 +15,6 @@ def chunk_reader(file_name, chunk_size, chunk_queue, is_encryption):
                 chunk_queue.put((chunk_id, chunk))
                 chunk_id += 1
 
-        print('reader end')
-
     except FileNotFoundError:
        print('File not found')
     except Exception as e:
