@@ -1,46 +1,35 @@
-from multiprocessing import Queue, Process
-import os
+import os, time
 
 from console.args import parse_args
 from utils.crypto import derive_key_from_string
 
-from io_utils.reader import chunk_reader, read_header
-from io_utils.writer import chunk_writer
-from encryption.worker_handler import start_workers, stop_workers
+from io_utils.reader import read_header,get_file_size
+from io_utils.writer import create_file
+from encryption.chunker import create_chunk_task_queue
+
+from encryption.worker_handler import start_workers
 
 def main():
 
     #header: 8b - nonce, 4b - chunk size
-    task_queue = Queue()
+    start = time.perf_counter()
 
-    #read
-    reader = Process(
-        target= chunk_reader,
-        args=(in_file_path, chunk_size, task_queue, is_encryption)
-    )
-    reader.start()
+    file_size_in = get_file_size(in_file_path)
+    create_file(out_file_path, file_size_in, chunk_size, is_encryption,nonce.to_bytes(8, 'big') + chunk_size.to_bytes(4, 'big'))
 
-    #work
-    result_queue, workers = start_workers(worker_count, task_queue, key, nonce, is_encryption, None)
+    task_queue = create_chunk_task_queue(chunk_size, file_size_in, is_encryption)
 
-    #write
-    writer = Process(
-        target= chunk_writer,
-        args=(out_file_path, result_queue, is_encryption ,nonce.to_bytes(8,'big') + chunk_size.to_bytes(4,'big'), None)
-    )
-    writer.start()
+    for i in range(worker_count):
+        task_queue.put(None)
 
-    #stop
-    reader.join()
-    stop_workers(worker_count, task_queue)
+    workers = start_workers(in_file_path, out_file_path, worker_count, task_queue, chunk_size, key, nonce, is_encryption, None)
+    for w in workers:
+        w.join()
 
-    result_queue.put(None)
-    writer.join()
-    # print('writer end')
+    end = time.perf_counter()
 
-    for worker in workers:
-        # print('joining worker')
-        worker.join()
+    elapsed_ms = (end - start) * 1000
+    print(f"DONE IN: {elapsed_ms:.3f} ms")
 
 if __name__ == "__main__":
 

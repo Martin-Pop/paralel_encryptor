@@ -1,6 +1,11 @@
 import argparse
 
 def parse_args():
+    """
+    Parses command line arguments
+    :return: namespace of parsed arguments
+    """
+
     parser = argparse.ArgumentParser(
         description="Parallel AES-GCM encryptor / decryptor"
     )
@@ -45,8 +50,8 @@ def parse_args():
     parser.add_argument(
         "-w", "--workers",
         type=int,
-        default=4,
-        help="Number of worker processes (default 4)"
+        default=2,
+        help="Number of worker processes (default 2)"
     )
 
     return parser.parse_args()
