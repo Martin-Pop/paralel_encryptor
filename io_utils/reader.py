@@ -1,4 +1,7 @@
-import os, mmap
+import os, mmap, logging
+
+log = logging.getLogger(__name__)
+
 
 def read_header(file_path):
     """
@@ -12,12 +15,11 @@ def read_header(file_path):
             chunk_size = f.read(4)
 
             return base_nonce_bytes, chunk_size
-    except FileNotFoundError:
-        print('File not found')
-        return None
+    except (FileNotFoundError, PermissionError, IsADirectoryError, OSError) as e:
+        log.error(f'Error reading header of: {file_path} - {e}', exc_info=True)
     except Exception as e:
-        print('Unexpected error: {}'.format(e))
-        return None
+        log.critical(f'Unexpected error reading header: {e}', exc_info=True)
+
 
 def map_read_file(file_path):
     """
@@ -25,13 +27,18 @@ def map_read_file(file_path):
     :param file_path: input file path
     :return: reader and memory map obj
     """
+    f = None
     try:
         f = open(file_path, 'rb')
         memory_map = mmap.mmap(f.fileno(), 0, tagname=None, access=mmap.ACCESS_READ)
         return f, memory_map
-
+    except (FileNotFoundError, PermissionError, IsADirectoryError, OSError, ValueError) as e:
+        log.error(f'Can not open or map: {file_path} - {e}', exc_info=True)
+        if f: f.close()
     except Exception as e:
-        print('Unexpected error: {}'.format(e))
+        log.critical(f'Unexpected error setting up mmap: {e}', exc_info=True)
+        if f: f.close()
+
 
 def get_file_size(file_path):
     """
@@ -40,10 +47,11 @@ def get_file_size(file_path):
     :return: size
     """
     try:
-      with open(file_path, 'rb') as f:
-          f.seek(0, os.SEEK_END)
-          file_size = f.tell()
-          return file_size
-
+        with open(file_path, 'rb') as f:
+            f.seek(0, os.SEEK_END)
+            file_size = f.tell()
+            return file_size
+    except (PermissionError, FileNotFoundError, IsADirectoryError, OSError) as e:
+        log.error(f'Error opening file: {file_path} - {e}', exc_info=True)
     except Exception as e:
-        print('Unexpected error: {}'.format(e))
+        log.critical(f'Unexpected error getting file size : {e}', exc_info=True)
