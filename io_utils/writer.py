@@ -1,4 +1,6 @@
-import mmap, math
+import mmap, math, logging
+
+log = logging.getLogger(__name__)
 
 def reverse_size(enc_size, chunk_size):
     """
@@ -21,7 +23,7 @@ def reverse_size(enc_size, chunk_size):
 
     raise ValueError("Invalid size")
 
-def create_file(file_path, size, chunk_size , is_encryption, header):
+def create_file(file_path, size, chunk_size, is_encryption, header):
     """
     Create a file with given size.
     :param file_path: file path
@@ -32,25 +34,21 @@ def create_file(file_path, size, chunk_size , is_encryption, header):
     :return: final size of the file
     """
     try:
-        with open(file_path, "wb", buffering=0) as f:
+        with open(file_path, "wb") as f:
 
             if is_encryption:
                 size = size + (math.ceil(size / chunk_size) * 16) + 12
-                f.truncate(size)
-                f.seek(size - 1)
-                f.write(b"\x00")
-                f.flush()
-                f.seek(0)
                 f.write(header)
             else:
-               size = reverse_size(size, chunk_size)
-               f.truncate(size)
+                size = reverse_size(size, chunk_size)
 
-            f.seek(size-1)
-            f.write(b"\x01")
+            f.seek(size - 1)
+            f.write(b"\x00")
         return size
-    except Exception as ex:
-        print(ex)
+    except (PermissionError, FileNotFoundError, IsADirectoryError, OSError) as e:
+        log.error(f'Can not create file {file_path} - {e}',exc_info=True)
+    except Exception as e:
+        log.critical(f'Unexpected error creating file {file_path} - {e}', exc_info=True)
 
 def map_write_file(file_path):
     """
@@ -58,6 +56,7 @@ def map_write_file(file_path):
     :param file_path: output file path
     :return: reader and memory map obj
     """
+    f = None
     try:
         f = open(file_path, "r+b")
         memory_map = mmap.mmap(
@@ -65,10 +64,10 @@ def map_write_file(file_path):
             length=0,
             access=mmap.ACCESS_WRITE,
         )
-
         return f, memory_map
-
-    except FileNotFoundError:
-        print('File not found')
+    except (PermissionError, FileNotFoundError, IsADirectoryError, OSError) as e:
+        log.error(f'Unable to create memory map {file_path} - {e}', exc_info=True)
+        if f: f.close()
     except Exception as e:
-        print('W Unexpected error: {}'.format(e))
+        log.critical(f'Unable to create memory map {file_path} - {e}', exc_info=True)
+        if f: f.close()
