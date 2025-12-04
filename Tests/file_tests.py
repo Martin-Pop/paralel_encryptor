@@ -1,11 +1,12 @@
-import unittest
+import unittest, os, mmap
 from unittest.mock import patch
-import os
 
 from multiprocessing import Queue
 from utils.crypto import derive_key_from_string
 
-class TestLogic(unittest.TestCase):
+import main as app
+
+class FileTest(unittest.TestCase):
 
     def test_overwrite_input_file(self):
 
@@ -13,8 +14,6 @@ class TestLogic(unittest.TestCase):
         filename = "test_data.txt"
         with open(filename, "wb") as f:
             f.write(content)
-
-        import main as app
 
         app.in_file_path = filename
         app.out_file_path = filename
@@ -38,8 +37,6 @@ class TestLogic(unittest.TestCase):
         self.assertEqual(content, new_content, "Input file was overwritten by output file")
 
     def test_cleanup_on_crash(self):
-        import main as app
-        import os
 
         app.in_file_path = "in.txt"
         app.out_file_path = "out.enc"
