@@ -1,4 +1,4 @@
-# AES-GCM File Encryptor (WIP)
+# AES-GCM File Encryptor
 
 > ⚠️ **WARNING: WORK IN PROGRESS**
 >
@@ -30,6 +30,7 @@ pip install cryptography
 ```
 ---
 ## How It Works
+
 The tool splits the input file into fixed-size chunks to allow parallel processing.
 Encryption: * Reads N bytes of raw data.
 Writes N + 16 bytes (Encrypted Data + 16-byte Auth Tag).
@@ -39,8 +40,7 @@ File Structure:
 Header (12 bytes): 8 bytes for nonce and 4 bytes for chunk size.
 ---
 ## Known Issues & Limitations
-- Large files allocation takes alot of time.
-- Parameters are not validated yet.
+- Parameters are not yet validated.
 - Unexpected crashes might not terminate all processes.
 
 ---
@@ -53,11 +53,9 @@ Header (12 bytes): 8 bytes for nonce and 4 bytes for chunk size.
 
 ### 2. Running the Script
 The script is run via the command line. You must specify whether you want to encrypt (-e) or decrypt (-d) the file.
-
 ```Bash
 python main.py [mode] -i <input_file> -o <output_file> -k <key> [options]
 ```
-
 
 | Argument    | Flag              | Required | Description                                                   |
 |-------------|-------------------|----------|---------------------------------------------------------------|
@@ -70,5 +68,11 @@ python main.py [mode] -i <input_file> -o <output_file> -k <key> [options]
 | Workers     | -w, --workers     | No       | Number of parallel worker processes. Default: 2.             |
 
 ---
+
+## Errors
+
+Errors are printed to the console as well as logged into file 'app.log' found in the same directory as 'main.py'
+. Log file also contains traceback.
+
 ## Disclaimer
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND
