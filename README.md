@@ -5,21 +5,25 @@
 > This project is currently in development.
 > * There may be critical bugs leading to data corruption.
 > * **Do not use this tool to encrypt important or sensitive data without having a backup.**
+
 ---
+
 ## Overview
 
 This is a Python tool designed for encrypting and decrypting files
-using **AES-256-GCM** (Galois/Counter Mode). 
-
-Uses **multiprocessing** and **memory-mapped files (`mmap`)**.
+using **AES-256-GCM** (Galois/Counter Mode). Uses **multiprocessing** and **memory-mapped files (`mmap`)**.
 This allows it to process data chunks in parallel.
+
 ---
+
 ## Key Features
 
 * **Algorithm:** AES-256-GCM (Authenticated Encryption).
 * **Parallel Processing:** Uses a worker pool to encrypt/decrypt chunks concurrently.
 * **Memory Efficiency:** Utilizes `mmap` to handle files larger than available RAM.
+
 ---
+
 ## Requirements
 
 * Python 3.8+
@@ -28,7 +32,9 @@ This allows it to process data chunks in parallel.
 ```bash
 pip install cryptography
 ```
+
 ---
+
 ## How It Works
 
 The tool splits the input file into fixed-size chunks to allow parallel processing.
@@ -38,12 +44,16 @@ Decryption: * Reads N + 16 bytes.
 Writes N bytes of raw data.
 File Structure:
 Header (12 bytes): 8 bytes for nonce and 4 bytes for chunk size.
+
 ---
+
 ## Known Issues & Limitations
+
 - Parameters are not yet validated.
 - Unexpected crashes might not terminate all processes.
 
 ---
+
 ## Usage
 
 ### 1. Installation
@@ -74,5 +84,8 @@ python main.py [mode] -i <input_file> -o <output_file> -k <key> [options]
 Errors are printed to the console as well as logged into file 'app.log' found in the same directory as 'main.py'
 . Log file also contains traceback.
 
+---
+
 ## Disclaimer
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND
