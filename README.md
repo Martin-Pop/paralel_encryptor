@@ -51,7 +51,8 @@ Header (12 bytes): 8 bytes for nonce and 4 bytes for chunk size.
 
 - Parameters are not yet validated.
 - Unexpected crashes might not terminate all processes.
-
+- Keyboard interrupt while **starting processes** will result in frozen console!
+- There is no limit for worker count, however high number can result with freeze.
 ---
 
 ## Usage
