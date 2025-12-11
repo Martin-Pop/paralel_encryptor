@@ -23,7 +23,8 @@ class FileTest(unittest.TestCase):
             'worker_count': 1,
             'key': derive_key_from_string('test'),
             'nonce': 12345,
-            'key_string': 'test'
+            'key_string': 'test',
+            'force': True
         }
 
         app.validated_args = args
@@ -31,8 +32,8 @@ class FileTest(unittest.TestCase):
 
         try:
              app.main() #will err at undefined log variable - ignore
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
 
         with open(filename, "rb") as f:
             new_content = f.read()
@@ -53,7 +54,8 @@ class FileTest(unittest.TestCase):
             'worker_count': 2,
             'key': derive_key_from_string('test'),
             'nonce': 12345,
-            'key_string': 'test'
+            'key_string': 'test',
+            'force': True
         }
 
         app.validated_args = args
