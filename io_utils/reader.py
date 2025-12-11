@@ -43,7 +43,7 @@ def map_read_file(file_path):
 def get_file_size(file_path):
     """
     Gets size of a file
-    :param file_path: paht of the file
+    :param file_path: path of the file
     :return: size
     """
     try:
@@ -55,3 +55,11 @@ def get_file_size(file_path):
         log.error(f'Error opening file: {file_path} - {e}', exc_info=True)
     except Exception as e:
         log.critical(f'Unexpected error getting file size : {e}', exc_info=True)
+
+def does_file_exists(file_path):
+    """
+    Util function to check if file exists
+    :param file_path: path to check
+    :return: True if exists else False
+    """
+    return os.path.exists(file_path)

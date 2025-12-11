@@ -52,7 +52,9 @@ class SuppressTracebackFormatter(logging.Formatter):
     def format(self, record):
         msg = super().formatMessage(record)
 
-        if record.levelno >= logging.ERROR:
+        if record.levelno == logging.WARNING:
+            msg = f"\033[33m{msg}\033[0m"
+        elif record.levelno > logging.WARNING:
             msg = f"{"\033[31m"}{msg}{"\033[0m"}"
 
         return msg

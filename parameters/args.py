@@ -65,6 +65,13 @@ def parse_args():
         help="Number of worker processes (default 2)"
     )
 
+    parser.add_argument(
+        "-f", "--force",
+        required=False,
+        action="store_true",
+        help="Force overwriting of output file if exists"
+    )
+
     return parser.parse_args()
 
 
@@ -105,5 +112,6 @@ def validate_args(args):
         'worker_count': args.workers,
         'key': key,
         'nonce': nonce,
-        'key_string': args.key
+        'key_string': args.key,
+        'force': args.force,
     }

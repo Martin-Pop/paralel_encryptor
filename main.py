@@ -2,8 +2,9 @@ import time, logging
 
 from parameters.args import parse_args, validate_args
 
-from io_utils.reader import get_file_size
+from io_utils.reader import get_file_size, does_file_exists
 from io_utils.writer import create_file
+from io_utils.console import resolve_yes_no
 
 from encryption.chunker import create_chunk_task_queue
 from encryption.worker_handler import start_workers
@@ -14,6 +15,11 @@ from logger.configure import configure_logger_queue, add_queue_handler_to_root
 
 def main():
     # header: 8b - nonce, 4b - chunk size
+
+    if not validated_args['force'] and does_file_exists(validated_args['out_file_path']):
+        overwrite = resolve_yes_no(f'File {validated_args["out_file_path"]} already exists. Overwrite? [y/N]','warning')
+        if not overwrite:
+            return
 
     start = time.perf_counter()
 
@@ -55,7 +61,7 @@ def main():
     end = time.perf_counter()
 
     elapsed_ms = (end - start) * 1000
-    log.info(f"PROGRAM FINISHED IN: {elapsed_ms:.3f} ms")
+    log.info(f"SUCCESSFULLY FINISHED IN: {elapsed_ms:.3f} ms")
 
 
 if __name__ == "__main__":
