@@ -55,7 +55,7 @@ class SuppressTracebackFormatter(logging.Formatter):
         if record.levelno == logging.WARNING:
             msg = f"\033[33m{msg}\033[0m"
         elif record.levelno > logging.WARNING:
-            msg = f"{"\033[31m"}{msg}{"\033[0m"}"
+            msg = f"\033[31m{msg}\033[0m"
 
         return msg
 

@@ -79,7 +79,7 @@ if __name__ == "__main__":
         args = parse_args()
         validated_args = validate_args(args)
 
-        log.info(f'MODE: {'ENCRYPT' if validated_args['is_encryption'] else 'DECRYPT'}')
+        log.info('MODE:' + ('ENCRYPT' if validated_args['is_encryption'] else 'DECRYPT'))
         log.info(f'IN: {validated_args["in_file_path"]}')
         log.info(f'OUT: {validated_args["out_file_path"]}')
         log.info(f'CHUNK SIZE: {validated_args["chunk_size"]}')

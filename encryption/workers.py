@@ -69,9 +69,9 @@ def encryption_worker(config):
             out_len = len(out_data)
             mm_out[write_offset: write_offset + out_len] = out_data
     except InvalidTag:
-        log.error(f'{'Encryption' if config.is_encryption else 'Decryption'} failed because of invalid key or invalid/corrupted file')
+        log.error(('Encryption' if config.is_encryption else 'Decryption') + 'failed because of invalid key or invalid/corrupted file')
     except Exception as e:
-        log.error(f'Unexpected error has occurred while {'encrypting' if config.is_encryption else 'decrypting'}: {e}', exc_info=True)
+        log.error('Unexpected error has occurred while ' + ('encrypting ' if config.is_encryption else 'decrypting ') + str(e), exc_info=True)
     finally:
         mm_in.close()
         mm_out.close()
