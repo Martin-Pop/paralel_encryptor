@@ -62,7 +62,7 @@ This allows it to process data chunks in parallel.
 
 ### 1. Installation
 
-* Download latest release
+* Download [latest release](https://github.com/Martin-Pop/Parallel-Encryptor/releases/tag/Latest)
 * If you want to compile yourself or run in your python enviroment:
     * clone repo `git clone https://github.com/Martin-Pop/Parallel-Encryptor.git`
     * change directory: `cd Parallel-Encryptor`
